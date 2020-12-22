@@ -1,0 +1,13 @@
+- hosts: all
+  vars_files: 
+   - mys.yml  
+  tasks:
+    - name:  sending the email using SMTP server
+      mail: 
+         host: smtp.gmail.com	
+         port: 587
+         username: "{{ u }}"
+         password: "{{ p }}"
+         to: agrawalharsh199925@gmail.com
+         subject: ansible training
+         body: hi this ts second test mail	
