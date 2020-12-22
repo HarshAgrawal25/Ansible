@@ -1,0 +1,6 @@
+- hosts: 127.0.0.1
+  tasks:
+    - user:
+        name: "jack5"
+        password: "redhat"
+       
