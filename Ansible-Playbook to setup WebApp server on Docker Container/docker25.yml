@@ -1,0 +1,39 @@
+- hosts: all
+  tasks:
+  - name: setting up docker yum configuration
+    yum_repository:
+       name: dockername	
+       description: desc for docker
+       baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+       gpgcheck: no
+
+  - name: Installing docker on managed node
+    command: "yum install docker-ce --nobest -y"
+
+
+  - name: Starting docker services
+    service:
+      name: docker
+      state: started
+ 
+  - name: INstalling python library
+    pip:
+      name: docker-py
+
+  - name: Pulling httpd image
+    docker_image:
+       name: httpd
+       source: pull
+
+  - name: copying index page to managed node
+    copy:
+        src: "index.html"
+        dest: "/var/www/html/index.html"
+
+  - name: Creating docker container
+    docker_container:
+       name: httpd
+       image: httpd
+       state: started
+       volumes:
+          -  /var/www/html/:/usr/local/apache2/htdocs	 
