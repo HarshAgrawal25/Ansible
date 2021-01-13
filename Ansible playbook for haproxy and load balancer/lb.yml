@@ -1,0 +1,38 @@
+- hosts: myweb
+  tasks:
+  - name: configuring web servers
+    package:
+      name: "httpd"
+  
+  - name: making  index.html file
+    copy:
+       dest: "/var/www/html/index.html"
+       content: "Hello 05/01/2021"    
+
+  - name: starting the service
+    service:
+       name: "httpd"
+       state:  restarted
+
+  - name: stop firewall
+    firewalld:
+       port: "80/tcp"
+       state: enabled
+       permanent: yes
+       immediate: yes
+ 
+- hosts: mylb
+  tasks:
+  - name: confugring load balancers
+    package:
+      name: "haproxy"
+  
+  - name: editing haproxy.cfg file
+    template:
+       dest: "/etc/haproxy/haproxy.cfg"
+       src: "haproxy.cfg.j2"
+    
+  - name: starting the service
+    service:
+       name: "haproxy"
+       state: restarted
