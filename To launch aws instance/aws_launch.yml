@@ -9,5 +9,5 @@
         key_name: awsKeypair
         name: OS_from_Ansible
         state: present
-        aws_access_key: AKIARXCH5ZBB3LJMGYJQ
-        aws_secret_key: uH44LgzAlnQyTEPP+bxb6gOIX3DlyQmPQ34OgoUI
+        aws_access_key: <add your access  key here>
+        aws_secret_key: <add your secret kry here>
