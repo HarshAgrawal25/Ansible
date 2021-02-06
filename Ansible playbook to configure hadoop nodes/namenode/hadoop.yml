@@ -1,0 +1,44 @@
+- hosts: namenode
+  vars_files:
+          - name_var.yml
+  tasks:
+     - name: "copying jdk files on namenode"
+       copy:
+         dest: "/root"
+         src: "{{ jdk_path }}"           
+
+     - name: "copying hadoop files on namenode"
+       copy:
+         dest: "/root"
+         src: "{{ hadoop_path }}"   
+
+      
+     - name: "installing jdk"
+       command: rpm -i "{{ jdk_software }}" 
+       ignore_errors: yes
+        
+  
+     - name: "installing hadoop"
+       command: rpm -i hadoop-1.2.1-1.x86_64.rpm --force
+       ignore_errors: yes 
+
+     - name: configuring core-site.xml file
+       template:
+          dest: "/etc/hadoop/core-site.xml"
+          src: "core-site.xml"
+
+     - name: configuring hdfs-site.xml file
+       template:
+          dest: "/etc/hadoop/hdfs-site.xml"
+          src: "hdfs-site.xml"
+
+     - name: formatting master
+       command: hadoop namenode -format
+        
+
+     - name: starting hadoop service
+       command: hadoop-daemon.sh start namenode
+         
+   
+      
+
