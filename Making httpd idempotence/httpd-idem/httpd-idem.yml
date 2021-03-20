@@ -1,0 +1,24 @@
+- hosts: httpd-idem
+  tasks:
+     - name: to install httpd
+       package: 
+          name: httpd
+          state: present 
+
+     - name: copying index.html file
+       copy:
+          src: index.html
+          dest: /var/www/html/index.html
+       notify: web
+   
+     - service:
+           name: "httpd"
+           state: started
+           enabled: yes
+
+  handlers:
+     - name: web 
+       service:
+           name: "httpd"
+           state: restarted
+           enabled: yes
