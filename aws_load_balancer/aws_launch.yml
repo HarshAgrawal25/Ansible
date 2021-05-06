@@ -1,0 +1,31 @@
+- hosts: localhost
+  vars_files:
+         vars.yml
+  tasks:
+   - name: launching load_balancer
+     ec2:
+        region: ap-south-1
+        image: ami-0bcf5425cdc1d8a85
+        instance_type: t2.micro
+        vpc_subnet_id: subnet-630b010b 
+        key_name: awsKeypair
+        instance_tags:
+            Name: Load_balancer
+        aws_access_key: "{{ aws_access }}"
+        aws_secret_key: "{{ secret_key }}"
+        count: 1
+
+   - name: launching 2 web_servers
+     ec2:
+        region: ap-south-1
+        image: ami-0bcf5425cdc1d8a85
+        instance_type: t2.micro
+        vpc_subnet_id: subnet-630b010b 
+        key_name: awsKeypair
+        instance_tags:
+             Name: Web_servers
+        state: present
+        aws_access_key: "{{ aws_access }}"
+        aws_secret_key: "{{ secret_key }}"
+        count: 2   
+     

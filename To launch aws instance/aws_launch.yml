@@ -2,10 +2,10 @@
   tasks:
    - ec2_instance:
         region: ap-south-1
-        image_id: ami-0a9d27a9f4f5c0efc
+        image_id: ami-0bcf5425cdc1d8a85
         instance_type: t2.micro
         vpc_subnet_id: subnet-630b010b
-        security_group: sg-aa99d4cd
+        security_group: sg-02c494868ecff0627 
         key_name: awsKeypair
         name: OS_from_Ansible
         state: present
