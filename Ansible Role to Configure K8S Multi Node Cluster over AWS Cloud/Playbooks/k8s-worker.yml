@@ -1,0 +1,4 @@
+- hosts: ["tag_Name_slave_1", "tag_Name_slave_2"]
+  become: yes
+  roles:
+     - k8s-worker

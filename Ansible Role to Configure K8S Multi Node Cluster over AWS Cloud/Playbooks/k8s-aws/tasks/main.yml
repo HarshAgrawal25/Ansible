@@ -1,0 +1,50 @@
+---
+# tasks file for k8s-aws
+
+ - name: launching k8s master node
+   ec2:
+        instance_tags: 
+               Name: k8s-master
+        region: ap-south-1
+        key_name: "AWS(199903)"
+        image: ami-00bf4ae5a7909786c
+        instance_type: t2.micro
+        vpc_subnet_id: subnet-34f9165f
+        group: launch-wizard-7
+        aws_access_key: <Enter your aws_access_key here>
+        aws_secret_key: <Enter your aws_secret_key here>
+   register: master
+
+
+   # - name: "update inventory for masternode"
+   # blockinfile:
+           # path: "/root/mydb/ip.txt"
+           #           block: |
+#               [kube-Master]
+       
+
+ - name: launching 1st slave nodes
+   ec2:
+        instance_tags:
+             Name: slave-1
+        region: ap-south-1
+        key_name: "AWS(199903)"
+        image: ami-00bf4ae5a7909786c
+        instance_type: t2.micro
+        vpc_subnet_id: subnet-34f9165f
+        group: launch-wizard-7
+        aws_access_key: <Enter your aws_access_key here>
+        aws_secret_key: <Enter your aws_secret_key here>
+
+ - name: launching 2nd  slave nodes
+   ec2:
+        instance_tags: 
+             Name: slave-2
+        region: ap-south-1
+        key_name: "AWS(199903)"
+        image: ami-00bf4ae5a7909786c
+        instance_type: t2.micro
+        vpc_subnet_id: subnet-34f9165f
+        group: launch-wizard-7
+        aws_access_key: <Enter your aws_access_key here>
+        aws_secret_key: <Enter your aws_secret_key here>

@@ -1,0 +1,76 @@
+---
+# tasks file for k8s-master
+
+    - name: installing docker
+      package:
+        name: docker
+        state: present
+
+    - name: starting the docker service
+      service:
+              name: docker
+              state: "started"
+              enabled: yes
+
+    - name: setting yum
+      yum_repository:
+            name: Kubernetes
+            description: kubernetes repo
+            baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+            enabled: 1
+            gpgcheck: 1
+            repo_gpgcheck: 1
+            gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      register: a
+
+
+    - name: installing kubelet, kubeadm & kubectl
+      command: yum install kubeadm --disableexcludes=kubernetes -y
+
+
+    - name: image pulling
+      command: kubeadm config images pull
+
+    - name: change the cg group anme of docker
+      copy:
+         src: daemon.json
+         dest: /etc/docker
+
+    - name: restarting the service docker
+      service:
+          name: docker
+          state: "restarted"
+          enabled: yes
+
+    - name: installing iproute-tc
+      package:
+         name: iproute-tc
+         state: present
+
+    - name: running kubeadm command
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
+
+    - name: Creating the directory
+      file:
+              name: "$HOME/.kube"
+              state: directory
+
+    - name: Copy conf file
+      command: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+      
+    - name: Doing some required thing
+      shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+
+    - name: Installing flannel
+      shell: "kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+    - name: Generate join command
+      shell: "kubeadm token create --print-join-command "
+      register: token
+
+    - name: debugging
+      debug:
+              var: token.stdout
+
+    - name: Storing token
+      local_action: copy content={{ token.stdout }} dest=/task19/token  
+      

@@ -1,0 +1,4 @@
+- hosts: ["tag_Name_k8s_master"]
+  become: yes
+  roles: 
+     - k8s-master

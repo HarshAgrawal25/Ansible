@@ -1,0 +1,72 @@
+---
+# tasks file for k8s-worker
+
+    - name: installing docker
+      package:
+        name: docker
+        state: present
+
+    - name: starting the docker service
+      service:
+              name: docker
+              state: "started"
+              enabled: yes
+
+    - name: configuring yum repo for k8s
+      yum_repository:
+            name: Kubernetes
+            description: kubernetes repo
+            baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+            enabled: 1
+            gpgcheck: 1
+            repo_gpgcheck: 1
+            gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      register: a
+
+
+    - name: installing kubelet, kubeadm & kubectl
+      command: yum install kubelet kubectl  kubeadm --disableexcludes=kubernetes -y
+
+
+    - name: image pulling
+      command: kubeadm config images pull
+
+    - name: change the cg group name of docker
+      copy:
+         src: daemon.json
+         dest: /etc/docker
+
+    - name: restarting the service docker
+      service:
+          name: "docker"
+          state: "restarted"
+          enabled: yes
+
+    - name: installing iproute-tc
+      package:
+         name: iproute-tc
+         state: present
+
+    - name: start kubelet service 
+      service:
+              name: "kubelet"
+              state: started 
+              enabled: yes    
+
+    - name: Setting up Ip table
+      copy:
+              src: k8s.conf
+              dest: /etc/sysctl.d/
+             
+    - name: Restarting sysctl
+      shell: "sudo sysctl --system"
+      changed_when: false
+
+    - name: send master token to slave
+      copy:
+              src: "/task19/token"
+              dest: "/tmp/token"
+
+    - name: Joining to master node
+      shell: "bash /tmp/token"
+      

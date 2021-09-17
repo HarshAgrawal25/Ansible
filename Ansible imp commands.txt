@@ -1,0 +1,4 @@
+ansible-galaxy role list
+aws configure
+aws configure list
+ansible-playbook k8s.yml[file name]
