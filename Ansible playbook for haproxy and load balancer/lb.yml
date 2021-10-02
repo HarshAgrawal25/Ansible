@@ -7,7 +7,7 @@
   - name: making  index.html file
     copy:
        dest: "/var/www/html/index.html"
-       content: "Hello 05/01/2021"    
+       content: "Hello Harsh Agrawal"    
 
   - name: starting the service
     service:
